@@ -4,11 +4,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.exceptions import ValidationError
 
-from posts.models import Post, Comment, Follow, User, Group
+from posts.models import Post, Follow, User, Group
 from .serializers import (PostSerializer, CommentSerializer, FollowSerializer,
                           GroupSerializer)
 from .permissions import IsOwnerOrReadOnly
-from .tools import user_str_to_user_pk
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -61,6 +60,6 @@ class FollowViewSet(viewsets.ModelViewSet):
         following = User.objects.get(username=following_str)
 
         if user == following:
-            raise ValidationError(f'Нельзя подписаться на самого себя!')
+            raise ValidationError('Нельзя подписаться на самого себя!')
 
         serializer.save(user=user)

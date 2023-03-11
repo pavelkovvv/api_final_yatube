@@ -1,5 +1,3 @@
-import json
-
 from rest_framework import serializers
 
 from rest_framework.relations import SlugRelatedField
@@ -19,7 +17,6 @@ class SearchFollow(serializers.Field):
         return value
 
     def to_internal_value(self, data):
-        print(data)
         following = get_object_or_404(User, username=data)
         return following
 
