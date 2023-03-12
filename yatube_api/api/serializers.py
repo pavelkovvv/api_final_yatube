@@ -2,23 +2,9 @@ from rest_framework import serializers
 
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueTogetherValidator
-from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import ValidationError
 
 from posts.models import Comment, Post, Follow, User, Group
-
-
-class SearchFollow(serializers.Field):
-    """Класс для преобразования поля из типа str (мы получаем
-    от пользователя) в тип int (нужен, чтобы мы могли сохранить
-    значение в БД)
-    """
-
-    def to_representation(self, value):
-        return value
-
-    def to_internal_value(self, data):
-        following = get_object_or_404(User, username=data)
-        return following
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -52,7 +38,10 @@ class FollowSerializer(serializers.ModelSerializer):
         slug_field='username',
         default=serializers.CurrentUserDefault()
     )
-    following = SearchFollow()
+    following = serializers.SlugRelatedField(
+        queryset=User.objects.all(),
+        slug_field='username'
+    )
 
     class Meta:
         fields = ('user', 'following')
@@ -69,3 +58,13 @@ class FollowSerializer(serializers.ModelSerializer):
         ret['following'] = instance.following.username
         ret['user'] = instance.user.username
         return ret
+
+    def validate(self, data):
+        """
+        Проверяем то, что пользователь не подписывается сам на себя.
+        """
+
+        if self.context['request'].user == data['following']:
+            raise ValidationError('Нельзя подписаться на самого себя!')
+
+        return data
