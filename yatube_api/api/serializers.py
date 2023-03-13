@@ -59,12 +59,12 @@ class FollowSerializer(serializers.ModelSerializer):
         ret['user'] = instance.user.username
         return ret
 
-    def validate(self, data):
+    def validate_following(self, value):
         """
         Проверяем то, что пользователь не подписывается сам на себя.
         """
 
-        if self.context['request'].user == data['following']:
+        if self.context['request'].user == value:
             raise ValidationError('Нельзя подписаться на самого себя!')
 
-        return data
+        return value
