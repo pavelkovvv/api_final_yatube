@@ -196,7 +196,7 @@ Response:
 Request (Удаление публикации):
 
 <span style="color:red;font-weight:700;font-size:20px">
-    PATCH
+    DELETE
 </span>
 <span style="font-weight:700;font-size:16px">
     /api/v1/posts/{id}/
