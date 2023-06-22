@@ -2,7 +2,7 @@
 
 ## Описание проекта
 
-API для [проекта социальной сети Yatube](https://github.com/pavelkovvv/yatube).
+API для [проекта социальной сети Yatube](https://github.com/pavelkovvv/yatube). 
 
 В проекте реализованы следующие функции:
 
